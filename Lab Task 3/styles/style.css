@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+:root {
+    font-size: 100%;
+    font-size: 16px;
+    line-height: 1.5;
+    --primary-blue: #233975
+}
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Poppins',sans-serif;
+    font-weight: 500;
+}
+h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+a {
+    text-decoration: none;
+    color: var(--primary-blue);
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/*.small {
+    font-size: 80%;
+    text-align = center;
+}*/
+
+.split-screen {
+    display: flex;
+    flex-direction: column;
+}
+
+.left {
+    height: 200px;
+}
+
+.left, .right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .left for header background*/
+.left {
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.left .copy {
+    color: white;
+    text-align: center;
+    -webkit-font-smoothing: antialised;
+    -moz-osx-font-smoothong:
+}
+.left p {
+    font-weight: 400;
+}
+.right .copy {
+    color: black;
+    text-align: center;
+}
+.right .copy p {
+    margin: 1.5em 0;
+    font-size: 0.875rem;
+}
+.right form {
+    width: 328px;
+}
+form{
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+form input[type = "text"]{
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #c4c4c4;
+    padding: 1em;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.input-err{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 450;
+    font-size: 11px;
+    color: red;
+    margin-bottom: 0.5rem;
+    
+}
+.checkbox-container input {
+    position : absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.checkbox-container {
+    display: flex;
+    position: relative;
+    padding-left: 2rem;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 0 1.25rem 0;
+}
+.checkbox-container input:checked ~ .checkmark {
+    background-color: var(--primary-blue);
+    border: 1px solid var(--primary-blue)
+}
+.checkmark{
+    position: absolute;
+    width: 24px;
+    height:24px;
+    background: white;
+    border: 1px solid #c4c4c4;
+    border-radius: 2px;
+    top: -4px;
+    left: 0;
+}
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.checkbox-container input:checked ~ .checkmark::after {
+    display: flex;
+}
+.checkbox-container .checkmark::after {
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    width: 5px;
+    height: 10px;
+    left: 8px;
+    top: 4px;
+    transform: rotate(45deg);
+}
+.register-btn {
+    display: block;
+    width: 100%;
+    background: var(--primary-blue);
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.register-btn:hover {
+    background: #2c4893;
+    cursor: pointer;
+}
+
+.radio-checkbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #c4c4c4;
+    padding: 1em;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.gender {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% / 2 - 20px);
+}
+.degree {
+    width: calc(100% / 2 - 20px);
+}
+
+
+.radio-container input {
+    position : absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.radio-container {
+    display: flex;
+    position: relative;
+    padding-left: 2rem;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 0 1.25rem 0;
+}
+.radio-container input:checked ~ .radiomark {
+    background-color: var(--primary-blue);
+    border: 1px solid var(--primary-blue)
+}
+.radiomark{
+    position: absolute;
+    width: 24px;
+    height:24px;
+    background: white;
+    border: 1px solid #c4c4c4;
+    border-radius: 50px;
+    top: -4px;
+    left: 0;
+}
+.radiomark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.radio-container input:checked ~ .radiomark::after {
+    display: flex;
+}
+.radio-container .radiomark::after {
+    border: solid #2c4893;
+    background-color: white;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    left: 4.5px;
+    top: 4.5px;
+}
+
+form select{
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #c4c4c4;
+    padding: 1em;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.dob {
+    display: flex;
+    flex-direction: column;
+}
+
+.date {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.date-container {
+    width: calc(100% / 3 - 10px);
+}
+
+form input[type = "password"]{
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #c4c4c4;
+    padding: 1em;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
