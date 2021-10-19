@@ -6,59 +6,149 @@
 </head>
 
 <body>
-
     <?php
-    $currPass = "abc@1234";
-    $currpasswordErr =  $newpasswordErr = $retypepasswordErr = $status = "";
+    session_start();
+    $passwordErr = $new_passwordErr = $username = $confirm_passwordErr = $message = $error = "";
+    $password = $new_password = $confirm_password  = "";
+
+    if (!isset($_SESSION['username'])) {
+        session_destroy();
+        header("location:login.php");
+    } 
+    elseif (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+    }
+
+    function test_input($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (strcmp($_POST["current-pass"], $currPass) != 0) {
-            $currpasswordErr = "Current password dosen't matched";
-        } elseif (strcmp($_POST["new-pass"],  $currPass) == 0) {
-            $newpasswordErr = "New password should not be same as the Current Password";
-        } elseif (strcmp($_POST["retype-pass"], $_POST["new-pass"]) == 0) {
-            $retypepasswordErr = "New Password must match with the Retyped Password";
+
+        $password = $_POST["current-pass"];
+        $new_password = $_POST["new-pass"];
+        $confirm_password = $_POST["retype-pass"];
+
+
+
+        if (empty($password)) {
+            $passwordErr = "Password is required";
         } else {
-            $status = "Password Changed!";
+            if (strlen($password) < 8) {
+                $passwordErr = "Password must contain at least 8 character";
+            } else {
+
+                if (preg_match('/[#$%@]/', $password) !== 1) {
+                    $passwordErr = "Password have to contain at least one '#' or '$' or '%' or '@'";
+                } else {
+                    $data = file_get_contents("data\users_data.json");
+                    $data = json_decode($data, true);
+                    if (!empty($data)) {
+                        foreach ($data as $row) {
+                            if ($row["username"] == $username && $password != $row["password"]) {
+
+                                $passwordErr = "Invalid password";
+                                break;
+                            } elseif ($row["username"] == $username && $password == $row["password"]) {
+                                if (empty($new_password)) {
+                                    $new_passwordErr = "Password is required";
+                                } else {
+                                    if (strlen($new_password) < 8) {
+                                        $new_passwordErr = "Password must contain at least 8 character";
+                                    } else {
+
+                                        if (preg_match('/[#$%@]/', $new_password) !== 1) {
+                                            $new_passwordErr = "Password have to contain at least one '#' or '$' or '%' or '@'";
+                                        } else {
+                                            if (empty($confirm_password)) {
+                                                $confirm_passwordErr = "Confirm Password is required";
+                                            } else {
+                                                if (strcmp($new_password, $confirm_password) !== 0) {
+                                                    $confirm_passwordErr = "Password are not matched";
+                                                } else {
+                                                    $data = file_get_contents("data\users_data.json");
+                                                    $data = json_decode($data, true);
+                                                    if (!empty($data)) {
+                                                        foreach ($data as $key => $row) {
+                                                            if ($row["username"] == $_SESSION['username']) {
+                                                                $data[$key]['password'] = $new_password;
+                                                                $_SESSION['password'] = $new_password;
+                                                                $message = "Password changed!";
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        file_put_contents('data\users_data.json', json_encode($data));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     ?>
 
     <div class="split-screen">
-        <div class="left">
-            <section class="copy">
-                <h1>Learn to code Free</h1>
-                <p>Read tutorials, try examples, write programs, and learn to code.</p>
-            </section>
-        </div>
-        <div class="right">
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                <section class="copy">
-                    <h1>Change Password</h1>
-                    <p>It's a good idea to use a strong password that you dont use elsewhere</p>
-                    <span class="input-err" style="color: blue;"><?php echo $status ?></span>
-                </section>
-                <div class="input-container current-pass">
-                    <label for="current-pass">Current Password</label>
-                    <input id="current-pass" name="current-pass" type="password" placeholder="Enter your current passsword">
-                    <span class="input-err"><?php echo $currpasswordErr ?></span>
-                </div>
-                <div class="input-container new-pass">
-                    <label for="new-pass">New Password</label>
-                    <input id="new-pass" name="new-pass" type="password" placeholder="Enter your new passsword">
-                    <span class="input-err"><?php echo $newpasswordErr ?></span>
-                </div>
-                <div class="input-container retype-pass">
-                    <label for="retype-pass">Retype Password</label>
-                    <input id="retype-pass" name="retype-pass" type="password" placeholder="Retype your new password">
-                    <span class="input-err"><?php echo $retypepasswordErr ?></span>
-                </div>
+        <?php include 'portal_header.php'; ?>
+        <?php include 'navigation_bar.php' ?>
+        <div class="portal-body">
+            <div class="title">
+                <p>Change Password</p>
+                <hr>
+            </div>
 
-                <button class="register-btn" type="submit">Change</button>
-                <section class="copy">
-            </form>
+            <div class="blocks">
+                <div class="block-one" style="width: 100%;">
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                        <div class="fields">
+                            <div class="name">
+                                <span>Current Password: </span>
+                            </div>
+                            <div class="value">
+                                <input name="current-pass" type="text" value="<?php echo $password; ?>">
+                                <span class="input-err"><?php echo $passwordErr ?></span>
+                            </div>
+                        </div>
+
+                        <div class="fields">
+                            <div class="name">
+                                <span>New Password: </span>
+                            </div>
+                            <div class="value">
+                                <input name="new-pass" type="text" value="<?php echo $new_password; ?>">
+                                <span class="input-err"><?php echo $new_passwordErr ?></span>
+                            </div>
+                        </div>
+
+                        <div class="fields">
+                            <div class="name">
+                                <span>Retype Password: </span>
+                            </div>
+                            <div class="value">
+                                <input name="retype-pass" type="text" value="<?php echo $confirm_password; ?>">
+                                <span class="input-err"><?php echo $confirm_passwordErr ?></span>
+                            </div>
+                        </div>
+                       
+                        <button class="portal-btn" type="submit">Change</button>
+                        <section class="copy">
+                    </form>
+                    <span class="input-valid"><?php echo $message ?></span>
+                </div>
+            </div>
         </div>
     </div>
+    <?php include 'portal_footer.php'; ?>
 </body>
 
 </html>

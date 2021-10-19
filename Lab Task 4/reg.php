@@ -62,7 +62,7 @@
             $dobErr = "Please input a valid date";
             $isValid = false;
         } elseif ($isValid == true) {
-            $dob = test_input($_POST["dd"]) . "-" . test_input($_POST["mm"]) . "-" . test_input($_POST["yyyy"]);
+            $dob = test_input($_POST["yyyy"]) . "-" . test_input($_POST["mm"]) . "-" . test_input($_POST["dd"]);
             $isValid = true;
         }
 
@@ -146,6 +146,7 @@
                 'password'  => $password,
                 'dob'       => $dob,
                 'gender'    => $gender,
+                'picture'   => ""
             );
             $array_data[] = $new_data;
             $final_data = json_encode($array_data);
@@ -159,7 +160,7 @@
     ?>
 
     <div class="split-screen">
-        <?php include 'client_header.php';?>
+        <?php include 'client_header.php'; ?>
         <div class="right">
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <section class="copy">

@@ -8,12 +8,24 @@
 <body>
 
     <?php
+    session_start();
+    $time = time();
     $userErr = $usernameErr = $passwordErr = "";
+    $username = $password  = "";
+    function test_input($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $isUser = false;
         $isvalid = false;
+        $username =  test_input($_POST["username"]);
+        $password = $_POST["password"];
 
         //username validation
         if (strlen($_POST["username"]) < 2) {
@@ -62,7 +74,19 @@
             if ($isUser == false) {
                 $userErr = "Invalid Credentials";
             } else {
-                $userErr = "Signing in.....";
+                $_SESSION['username'] = $row["username"];
+                $_SESSION['password'] = $row["password"];
+                $_SESSION['name'] = $row["name"];
+                $_SESSION['email'] = $row["email"];
+                $_SESSION['dob'] = $row["dob"];
+                $_SESSION['gender'] = $row["gender"];
+                $_SESSION['picture'] = $row["picture"];
+                header("location: dashboard.php");
+            }
+
+            if (!empty($_POST['remember'])) {
+                setcookie("username", $_POST['username'], time() + 60);
+                setcookie("password", $_POST['password'], time() + 60);
             }
         }
     }
@@ -80,13 +104,21 @@
                 </section>
                 <div class="input-container name">
                     <label for="username">User Name</label>
-                    <input id="username" name="username" type="text" placeholder="Enter your username">
-                    <span class="input-err"><?php echo $usernameErr ?></span>
+                    <input id="username" name="username" type="text" placeholder="Enter your username" value="<?php if (isset($_COOKIE['username'])) {
+                                                                                                                    echo $_COOKIE['username'];
+                                                                                                                } else {
+                                                                                                                    echo $username;
+                                                                                                                } ?>">
+                    <span class=" input-err"><?php echo $usernameErr ?></span>
                 </div>
 
                 <div class="input-container password">
                     <label for="password">Password</label>
-                    <input id="password" name="password" type="password" placeholder="Enter your password">
+                    <input id="password" name="password" type="password" placeholder="Enter your password" value="<?php if (isset($_COOKIE['password'])) {
+                                                                                                                                            echo $_COOKIE['password'];
+                                                                                                                                        } else {
+                                                                                                                                            echo $password;
+                                                                                                                                        } ?>">
                     <span class="input-err"><?php echo $passwordErr ?></span>
                 </div>
 

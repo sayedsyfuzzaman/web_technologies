@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="styles\style.css">
     <title>Client Header</title>
+</head>
 
 <body>
     <div class="header">
@@ -11,9 +12,9 @@
         </div>
         <div class="block-description-two">
             <ul>
-                <li><a href="">Home</a></li>
-                <li><a href="">Registration</a></li>
-                <li><a href="">Login</a></li>
+                <li><a href="home1.php">Home</a></li>
+                <li><a href="reg.php">Registration</a></li>
+                <li><a href="login.php">Login</a></li>
             </ul>
         </div>
     </div>
