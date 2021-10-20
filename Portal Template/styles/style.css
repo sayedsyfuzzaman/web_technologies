@@ -91,6 +91,95 @@ a:hover {
 /* Portal Header End */
 
 
+/* Client Header Start */
+
+.header {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.header hr {
+  display: block;
+  border: 1px solid #2c4893;
+}
+.header .block-description-one {
+  width: 24%;
+  float: left;
+  margin-left: 15%;
+  margin-top: 15px;
+}
+.header .block-description-one a:hover {
+  text-decoration: none;
+}
+
+.header .block-description-two {
+  width: 24%;
+  float: right;
+  margin-right: 15%;
+}
+.header .block-description-two a {
+  display: block;
+  color: black;
+}
+.header .block-description-two ul {
+  float: right;
+}
+.header .block-description-two ul li {
+  display: inline-block;
+  color: black;
+}
+.header .block-description-two ul li a {
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #c4c4c4;
+  border-color: var(--primary-blue);
+  padding: 10px;
+}
+
+.header .block-description-two ul li a:hover {
+  border-color: none;
+  background-color: #2c4893;
+  color: #ffff;
+  text-decoration: none;
+}
+
+/* Client Header End */
+
+/* Client Footer Start */
+
+.footer {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.footer hr {
+  display: block;
+  border: 1px solid #2c4893;
+}
+.footer .block-description-one {
+  width: 24%;
+  float: left;
+  margin-left: 15%;
+}
+
+.footer .block-description-two {
+  width: 25%;
+  float: right;
+  margin-right: 15%;
+}
+.footer .block-description-two a {
+  display: block;
+  color: black;
+}
+/* Client Footer End */
+
 
 /* Portal Footer Start */
 
