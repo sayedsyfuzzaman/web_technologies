@@ -1,0 +1,31 @@
+.portal-body {
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
+.portal-body .page-title p
+{
+    display: block;
+    margin-top: 0%;
+    font-size: large;
+}
+
+.portal-body .page-items {
+    display: flex;
+}
+.portal-body .page-items .block-one {
+    width: 50%;
+    float: left;
+}
+
+.portal-body .page-items .block-two {
+    width: 50%;
+    float: right;
+}
+
+.portal-body .buttons-block {
+    display: block;
+    width: 100%
+}
+
