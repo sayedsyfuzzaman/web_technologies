@@ -22,6 +22,11 @@
         include 'portal_header.php';
         include 'navigation_bar.php';
 
+        require_once 'controller/Manager.php';
+
+        $manager = new Manager();
+        $managerInfo = $manager->showManager($_GET["id"]);
+
         $data = array(
             'name' => "",
             'email' => "",
@@ -50,11 +55,7 @@
         );
 
         $submissionErr = "";
-        $submitted = false;
-        $addManager = array(
-            'id' => "",
-            'password' => ""
-        );
+
         function test_input($data)
         {
             $data = trim($data);
@@ -72,10 +73,8 @@
                 $gender = $_POST["gender"];
             }
 
-            $target_file = $_FILES["fileToUpload"]["name"];
-
-
             $data = array(
+                'id' => $managerInfo["id"],
                 'name' => $_POST["fname"],
                 'email' => $_POST["email"],
                 'phone' => $_POST["phone"],
@@ -84,16 +83,11 @@
                 'dob' => $_POST["dob"],
                 'gender' => $gender,
                 'address' => $_POST["address"],
-                'file' =>  $target_file,
-                'old_file' => "",
-                'temp_name' => $_FILES["fileToUpload"]["tmp_name"],
-                'size' => $_FILES["fileToUpload"]["size"],
-                'filepath' => ""
             );
 
 
             $manager = new Manager();
-            $addManager = $manager->validation($data);
+            $updateManager = $manager->updateManager($data);
             $error = $manager->errors;
         }
         ?>
@@ -102,54 +96,50 @@
             <!-- Write your code here -->
 
             <div class="page-title">
-                <h2>Add Manager</h2>
+                <h2>Edit Manager</h2>
             </div>
             <div class="after-submit">
-                <p><?php if (!empty($addManager["id"])) {
-                        echo "Manager Added Successfully!";
-                        echo "ID: " . $addManager["id"];
-                    } ?></p>
-                <p><?php if (!empty($addManager["password"])) {
-                        echo "Password: " . $addManager["password"];
+                <p><?php if (!empty($updateManager["id"])) {
+                        echo "Data updated successfully!";
                     } ?></p>
             </div>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+            <form action="editManager.php?id=<?php echo $managerInfo['id'] ?>" method="POST" enctype="multipart/form-data">
                 <div class="page-items">
 
                     <div class="block-one">
                         <div>
                             <label for="fname">Full Name:</label><br>
-                            <input type="text" id="fname" name="fname"><br>
+                            <input type="text" id="fname" name="fname" value="<?php echo $managerInfo["name"] ?>"><br>
                             <span class="inputErr"><?php echo $error["name"]; ?></span>
                         </div>
 
                         <div>
                             <label for="email">Email:</label><br>
-                            <input type="text" id="email" name="email"><br>
+                            <input type="text" id="email" name="email" value="<?php echo $managerInfo["email"] ?>"><br>
                             <span class="inputErr"><?php echo $error["email"]; ?></span>
                         </div>
 
                         <div>
                             <label for="phone">Phone Number:</label><br>
-                            <input type="text" id="phone" name="phone"><br>
+                            <input type="text" id="phone" name="phone" value="<?php echo $managerInfo["phone"] ?>"><br>
                             <span class="inputErr"><?php echo $error["phone"]; ?></span>
                         </div>
 
                         <div>
                             <label for="nationality">Nationality:</label><br>
-                            <input type="text" id="nationality" name="nationality"><br>
+                            <input type="text" id="nationality" name="nationality" value="<?php echo $managerInfo["nationality"] ?>"><br>
                             <span class="inputErr"><?php echo $error["nationality"]; ?></span>
                         </div>
 
                         <div>
                             <label for="nid">NID Number:</label><br>
-                            <input type="text" id="nid" name="nid"><br>
+                            <input type="text" id="nid" name="nid" value="<?php echo $managerInfo["nid"] ?>"><br>
                             <span class="inputErr"><?php echo $error["nid"]; ?></span>
                         </div>
 
                         <div>
                             <label for="dob">Date of Birth:</label><br>
-                            <input type="date" max=<?= date('Y-m-d'); ?> id="dob" name="dob">
+                            <input type="date" max=<?= date('Y-m-d'); ?> id="dob" name="dob" value="<?php echo $managerInfo["dob"] ?>">
                             <span class="inputErr"><?php echo $error["dob"]; ?></span><br>
                         </div>
                     </div>
@@ -157,25 +147,19 @@
                     <div class="block-two">
                         <div>
                             <label for="gender">Gender:</label><br>
-                            <input type="radio" id="male" name="gender" value="male">
+                            <input type="radio" id="male" name="gender" value="male" <?php if ($managerInfo["gender"] == "male") echo "checked"; ?>>
                             <label for="male">Male</label><br>
-                            <input type="radio" id="female" name="gender" value="female">
+                            <input type="radio" id="female" name="gender" value="female" <?php if ($managerInfo["gender"] == "female") echo "checked"; ?>>
                             <label for="female">Female</label><br>
-                            <input type="radio" id="other" name="gender" value="other">
+                            <input type="radio" id="other" name="gender" value="other" <?php if ($managerInfo["gender"] == "other") echo "checked"; ?>>
                             <label for="female">Other</label><br>
                             <span class="inputErr"><?php echo $error["gender"]; ?></span>
                         </div>
 
                         <div>
                             <label for="address">Address:</label><br>
-                            <textarea id="address" name="address"></textarea><br>
+                            <textarea id="address" name="address"><?php echo $managerInfo["address"] ?></textarea><br>
                             <span class="inputErr"><?php echo $error["address"]; ?></span>
-                        </div>
-
-                        <div>
-                            <label for="image">Upload Professional Photo:</label><br>
-                            <input type="file" name="fileToUpload" id="fileToUpload">
-                            <span class="inputErr"><?php echo $error["pictureErr"]; ?></span>
                         </div>
                     </div>
 

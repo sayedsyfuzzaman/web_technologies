@@ -9,11 +9,11 @@
 <div class="container">
     <div class="nav-bar">
         <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">View Profile</a></li>
-            <li><a href="#">Edit Profile</a></li>
-            <li><a href="#">Change Profile Picture</a></li>
-            <li><a href="#">Change Password</a></li>
+            <li><a href="dashboard.php">Dashboard</a></li>
+            <li><a href="addManager.php">Add Manager</a></li>
+            <li><a href="showManagers.php">Managers Information</a></li>
+            <li><a href="addCourse.php">Add Course</a></li>
+            <li><a href="courses.php">Courses</a></li>
         </ul>
     </div>
     <!-- do not close tags here -->

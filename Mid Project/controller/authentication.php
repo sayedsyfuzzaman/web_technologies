@@ -3,7 +3,7 @@
 class authentication{
     function authenticateUser($data) {
     
-        require_once "C:/xampp/htdocs/web_tech/Mid Project/model/model.php"; 
+        require_once "C:/xampp/htdocs/web_technologies/Mid Project/model/model.php"; 
 
         $model = new model();
         $user = $model->getUserInfo($data);

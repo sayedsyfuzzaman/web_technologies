@@ -8,6 +8,14 @@
 
 
 <body>
+    <?php
+
+    session_start();
+    if (!isset($_SESSION['id'])) {
+		session_destroy();
+		header("location:login.php");
+	}
+    ?>
     <div class="split-screen">
         <?php include 'portal_header.php'; ?>
         <?php include 'navigation_bar.php' ?>

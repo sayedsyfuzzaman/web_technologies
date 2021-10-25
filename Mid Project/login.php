@@ -42,7 +42,7 @@
 
         if ($count < 3) {
             if (!empty($_POST["id"]) and !empty($_POST["password"])) {
-                require_once "C:/xampp/htdocs/web_tech/Mid Project/controller/authentication.php";
+                require_once "C:/xampp/htdocs/web_technologies/Mid Project/controller/authentication.php";
 
                 $authentication = new authentication();
                 $isUser = $authentication->authenticateUser($data);
@@ -74,6 +74,11 @@
             <section class="copy">
                 <h1>ProgSchool Portal</h1>
             </section>
+            <div class="block-description-two">
+            <ul>
+                <li style="color: #ffff;"><a href="home.php">Home</a></li>
+            </ul>
+        </div>
         </div>
         <div class="right">
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">

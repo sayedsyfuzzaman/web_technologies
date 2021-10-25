@@ -12,7 +12,7 @@
         </div>
         <div class="block-description-two">
             <ul>
-                <li><a href="home1.php">Home</a></li>
+                <li><a href="home.php">Home</a></li>
                 <li><a href="reg.php">Registration</a></li>
                 <li><a href="login.php">Login</a></li>
             </ul>
