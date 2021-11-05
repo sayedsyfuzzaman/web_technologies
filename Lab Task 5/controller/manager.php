@@ -1,6 +1,7 @@
 <?php
-require_once ('model/model.php');
-class Manager {
+require_once('model/model.php');
+class Manager
+{
 
     public $errors = array(
         'fname' => "",
@@ -17,7 +18,7 @@ class Manager {
 
     public $filepath = "";
 
-    
+
 
     function fetchAllManager()
     {
@@ -57,13 +58,13 @@ class Manager {
 
         $model = new model();
         $accountExist = $model->checkExistingAccount($data["email"]);
-        
+
         //email validation
         if (empty($data["email"])) {
             $this->errors["email"] =  "Email can not be empty";
         } elseif (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
             $this->errors["email"] =  "Invalid email format";
-        } elseif ((int)$accountExist == 0) {
+        } elseif ($accountExist == true) {
             $this->errors["email"] =  "Email already exist, try another.";
         } else {
             $this->errors["email"] = "";
@@ -74,8 +75,8 @@ class Manager {
             $this->errors["phone"] = "Phone number cannot be empty";
         } elseif (!filter_var($data["phone"], FILTER_SANITIZE_NUMBER_INT)) {
             $this->errors["phone"] = "Invalid phone number";
-        } elseif (!strlen($data["phone"]) >= 11) {
-            $this->errors["phone"] = "Phone number cannot be greate or less than 11";
+        } elseif (strlen($data["phone"]) != 11) {
+            $this->errors["phone"] = "Phone number cannot be greater or less than 11";
         } else {
             $this->errors["phone"] = "";
         }
@@ -107,8 +108,13 @@ class Manager {
         }
 
         //nid validation
+
+        $nidExist = $model->checkExistingNID($data["nid"]);
+
         if (empty($data["nid"])) {
             $this->errors["nid"] = "Nid cannot be empty";
+        } elseif ($nidExist == true) {
+            $this->errors["nid"] =  "Sorry! This NID already exist.";
         } elseif (!filter_var($data["nid"], FILTER_SANITIZE_NUMBER_INT)) {
             $this->errors["nid"] = "Invalid nid number";
         } else {
@@ -124,14 +130,14 @@ class Manager {
 
 
         //image validation
-        $target_dir = "resources/images/";
+        $target_dir = "images/";
         if (empty($data["file"])) {
             $this->errors["pictureErr"] = "picture is required";
         } else {
             $target_file =  $target_dir . $data["file"];
             $uploadOk = 1;
             $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            $filepath = "";
+            $this->filepath = $target_file;
             if ($data["file"] != "") {
                 $check = getimagesize($data["temp_name"]);
                 if ($check !== false) {
@@ -174,11 +180,37 @@ class Manager {
         ) {
 
             $data["filepath"] = $this->filepath;
-            
-            
 
-            $manager = $model->addManager($data);
-            return $manager;
+            //Getting Unique ID and Password
+            require_once('Generator.php');
+            $id = getManagerID();
+            $pass = getUniquePassword();
+            $data["id"] = $id;
+            $data["password"] = $pass;
+
+
+            $AddStatus = $model->addManager($data);
+            if ($AddStatus == true) {
+                $credentials = array(
+                    'id' => $data["id"],
+                    'password' => $data["password"]
+                );
+
+
+                if (move_uploaded_file($data["temp_name"], $target_file)) {
+
+                    $mypic = $target_file;
+                    $UploadConfirmation = "Picture has been uploaded Successfully";
+                    $filepath = $target_dir . htmlspecialchars(basename($data["file"]));
+
+
+                    if ($data["old_file"] != $filepath && $data["old_file"] != "") {
+                        unlink($data["old_file"]);
+                    }
+                }
+
+                return $credentials;
+            }
         }
         return "";
     }
