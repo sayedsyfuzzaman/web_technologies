@@ -87,7 +87,6 @@
       'filepath' => ""
     );
 
-
     $manager = new Manager();
     $credentials = $manager->addManager($data);
     $error = $manager->errors;

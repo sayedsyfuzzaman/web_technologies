@@ -1,5 +1,6 @@
 <?php
 require_once('model/model.php');
+
 class Manager
 {
 
@@ -17,8 +18,34 @@ class Manager
     );
 
     public $filepath = "";
+    public $target_file = "";
+    public $target_dir = "images/";
 
+    function fetchManager($id)
+    {
+        $model = new model();
+        $manager = $model->showManager($id);
 
+        $managerInfo = array();
+        foreach ($manager as $rows) {
+            $managerInfo = array(
+                'id' => $rows["id"],
+                'fname' => $rows["firstname"],
+                'lname' => $rows["lastname"],
+                'email' => $rows["email"],
+                'phone' => $rows["phone"],
+                'nationality' => $rows["nationality"],
+                'nid' => $rows["nid"],
+                'dob' => $rows["dob"],
+                'gender' => $rows["gender"],
+                'address' => $rows["address"],
+                'image' => $rows["image"]
+            );
+            break;
+        }
+
+        return $managerInfo;
+    }
 
     function fetchAllManager()
     {
@@ -27,7 +54,7 @@ class Manager
         return $managers;
     }
 
-    function addManager($data)
+    function inputValidation($data, $action)
     {
         //fname validation
         if (empty($data["fname"])) {
@@ -42,7 +69,7 @@ class Manager
             $this->errors["fname"] = "";
         }
 
-        //;name validation
+        //name validation
         if (empty($data["lname"])) {
             $this->errors["lname"] =  "Can not be empty";
         } elseif (str_word_count($data["lname"]) < 1) {
@@ -64,7 +91,7 @@ class Manager
             $this->errors["email"] =  "Email can not be empty";
         } elseif (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
             $this->errors["email"] =  "Invalid email format";
-        } elseif ($accountExist == true) {
+        } elseif ($accountExist == true and $action == "insert") {
             $this->errors["email"] =  "Email already exist, try another.";
         } else {
             $this->errors["email"] = "";
@@ -113,7 +140,7 @@ class Manager
 
         if (empty($data["nid"])) {
             $this->errors["nid"] = "Nid cannot be empty";
-        } elseif ($nidExist == true) {
+        } elseif ($nidExist == true and $action == "insert") {
             $this->errors["nid"] =  "Sorry! This NID already exist.";
         } elseif (!filter_var($data["nid"], FILTER_SANITIZE_NUMBER_INT)) {
             $this->errors["nid"] = "Invalid nid number";
@@ -130,14 +157,17 @@ class Manager
 
 
         //image validation
-        $target_dir = "images/";
-        if (empty($data["file"])) {
+
+        if (empty($data["file"]) && $action != "update") {
             $this->errors["pictureErr"] = "picture is required";
         } else {
-            $target_file =  $target_dir . $data["file"];
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            $this->filepath = $target_file;
+            if($data["imageSelected"] != "none"){
+                $this->target_file =  $this->target_dir . $data["file"];
+                $uploadOk = 1;
+                $imageFileType = strtolower(pathinfo($this->target_file, PATHINFO_EXTENSION));
+                $this->filepath = $this->target_file;
+            }
+            
             if ($data["file"] != "") {
                 $check = getimagesize($data["temp_name"]);
                 if ($check !== false) {
@@ -160,8 +190,6 @@ class Manager
                 if ($uploaded == 0) {
                     $this->errors["pictureErr"] = "Sorry, your file was not uploaded.";
                 }
-            } else {
-                $this->errors["pictureErr"] = "No Image was selected";
             }
         }
 
@@ -178,6 +206,14 @@ class Manager
             empty($this->errors["address"]) &&
             empty($this->errors["pictureErr"])
         ) {
+            return true;
+        }
+        return false;
+    }
+
+    function addManager($data)
+    {
+        if ($this->inputValidation($data, "insert") == true) {
 
             $data["filepath"] = $this->filepath;
 
@@ -189,6 +225,7 @@ class Manager
             $data["password"] = $pass;
 
 
+            $model = new model();
             $AddStatus = $model->addManager($data);
             if ($AddStatus == true) {
                 $credentials = array(
@@ -197,21 +234,50 @@ class Manager
                 );
 
 
-                if (move_uploaded_file($data["temp_name"], $target_file)) {
-
-                    $mypic = $target_file;
-                    $UploadConfirmation = "Picture has been uploaded Successfully";
-                    $filepath = $target_dir . htmlspecialchars(basename($data["file"]));
-
-
-                    if ($data["old_file"] != $filepath && $data["old_file"] != "") {
-                        unlink($data["old_file"]);
-                    }
+                if (move_uploaded_file($data["temp_name"],  $this->target_file)) {
+                    $this->filepath = $this->target_dir . htmlspecialchars(basename($data["file"]));
                 }
-
                 return $credentials;
             }
         }
         return "";
     }
+
+
+    function updateManager($data)
+    {
+        if ($this->inputValidation($data, "update") == true) {
+
+            if($data["imageSelected"] != "none"){
+                $data["filepath"] = $this->filepath;
+            }
+            
+            $model = new model();
+            $UpdateStatus = $model->updateManager($data);
+            if ($UpdateStatus == true) {
+                if (move_uploaded_file($data["temp_name"], $this->target_file)) {
+
+                    $this->filepath = $this->target_dir . htmlspecialchars(basename($data["file"]));
+
+                    //need to unlink old image file
+                }
+
+                
+                return "updated";
+            }
+
+        }
+        return "failed";
+    }
+
+    function deleteManager($id)
+    {
+        $model = new model();
+        $Status = $model->deleteManager($id);
+        if ($Status == true) {
+            return true;
+        }
+        return false;
+    }
+    
 }

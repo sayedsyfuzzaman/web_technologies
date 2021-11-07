@@ -11,43 +11,70 @@ class Model
         $Query2 = "INSERT into users (id, password, usertype)
         VALUES (:id, :password, :usertype); ";
 
+        try{
+            $stmt1 = $conn->prepare($Query1);
+            $stmt1->execute([
+                ':id'           => $data["id"],
+                ':firstname'     => $data["fname"],
+                ':lastname'      => $data["lname"],
+                ':email'         => $data["email"],
+                ':phone'         => $data["phone"],
+                ':nid'         => $data["nid"],
+                ':dob'          => $data["dob"],
+                ':gender'        => $data["gender"],
+                ':address'        => $data["address"],
+                ':image'  =>     $data["filepath"], 
+                ':nationality'  => $data["nationality"]
+            ]);
 
-            try{
-                $stmt1 = $conn->prepare($Query1);
-                $stmt1->execute([
-                    ':id'           => $data["id"],
-                    ':firstname'     => $data["fname"],
-                    ':lastname'      => $data["lname"],
-                    ':email'         => $data["email"],
-                    ':phone'         => $data["phone"],
-                    ':nid'         => $data["nid"],
-                    ':dob'          => $data["dob"],
-                    ':gender'        => $data["gender"],
-                    ':address'        => $data["address"],
-                    ':image'  =>     $data["filepath"], 
-                    ':nationality'  => $data["nationality"]
-                ]);
+            $stmt2 = $conn->prepare($Query2);
+            $stmt2->execute([
+                ':id'           => $data["id"],
+                ':password'    =>$data["password"],
+                ':usertype'    => "Manager"
+            ]);
 
-                $stmt2 = $conn->prepare($Query2);
-                $stmt2->execute([
-                    ':id'           => $data["id"],
-                    ':password'    =>$data["password"],
-                    ':usertype'    => "Manager"
-                ]);
-
-                if($stmt1== true and $stmt2 == true){
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }catch(PDOException $e){
-                echo $e->getMessage();
+            if($stmt1== true and $stmt2 == true){
+                return true;
+            }
+            else {
+                $conn = null;
                 return false;
             }
-            
-            $conn = null;
+        }catch(PDOException $e){
+            echo $e->getMessage();
             return false;
+        }
+        
+        
+        $conn = null;
+        return false;
+    }
+
+    function updateManager($data) {
+        $conn = db_conn();
+        $selectQuery = "UPDATE manager set firstname = ?, lastname = ?, email = ?, phone = ?, nid = ?, dob = ?, gender = ?, address = ?, image = ?, nationality = ? where id = ?";
+        try{
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([
+                
+                $data["fname"],
+                $data["lname"],
+                $data["email"],
+                $data["phone"],
+                $data["nid"],
+                $data["dob"],
+                $data["gender"],
+                $data["address"],
+                $data["filepath"], 
+                $data["nationality"],
+                $data["id"]
+            ]);
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        $conn = null;
+        return true;
     }
 
     function checkExistingAccount($email)
@@ -119,6 +146,32 @@ class Model
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
-}
 
-?>
+    function showManager($id)
+    {
+        $conn = db_conn();
+        $selectQuery = 'SELECT * FROM `manager` where id = ?';
+        try {
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
+    function deleteManager($id){
+        $conn = db_conn();
+        $selectQuery = "DELETE FROM `manager` WHERE `id` = ?";
+        try{
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([$id]);
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        $conn = null;
+    
+        return true;
+    }
+}
