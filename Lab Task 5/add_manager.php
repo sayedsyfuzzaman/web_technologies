@@ -84,7 +84,8 @@
       'old_file' => "",
       'temp_name' => $_FILES["fileToUpload"]["tmp_name"],
       'size' => $_FILES["fileToUpload"]["size"],
-      'filepath' => ""
+      'filepath' => "",
+      "imageSelected" => ""
     );
 
     $manager = new Manager();

@@ -170,6 +170,14 @@ class Model
         }catch(PDOException $e){
             echo $e->getMessage();
         }
+
+        $selectQuery = "DELETE FROM `users` WHERE `id` = ?";
+        try{
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([$id]);
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
         $conn = null;
     
         return true;
