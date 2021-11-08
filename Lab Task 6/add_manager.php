@@ -13,6 +13,12 @@
 
   <?php
 
+  session_start();
+  if (!isset($_SESSION['id'])) {
+    session_destroy();
+    header("location:sign-in.php");
+  }
+
   $data = array(
     'id' => "",
     'password' => "",
@@ -101,10 +107,10 @@
         <div class="signup-form">
           <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data" class="mt-5 border p-4 bg-light shadow">
             <h4 class="mb-5 text-secondary">Create Manager Account</h4>
-            
+
             <?php
-            if(!empty($credentials["id"])) {
-              echo "<p class='text-success'>Account Created<br>Manager ID: ".$credentials["id"]."<br>Manager Password: ".$credentials["password"]."</p>";
+            if (!empty($credentials["id"])) {
+              echo "<p class='text-success'>Account Created<br>Manager ID: " . $credentials["id"] . "<br>Manager Password: " . $credentials["password"] . "</p>";
               $data = array(
                 'id' => "",
                 'password' => "",
@@ -134,52 +140,52 @@
 
               <div class="mb-3 col-md-6">
                 <label>Last Name<span class="text-danger">*</span></label>
-                <input type="text" name="lname" class="form-control" placeholder="Enter Last Name"value="<?php echo $data["fname"]; ?>"/>
+                <input type="text" name="lname" class="form-control" placeholder="Enter Last Name" value="<?php echo $data["fname"]; ?>" />
                 <span class="text-danger"><?php echo $error["lname"]; ?></span>
               </div>
 
               <div class="mb-3 col-md-6">
                 <label>Email<span class="text-danger">*</span></label>
-                <input type="text" name="email" class="form-control" placeholder="someone@email.com" value="<?php echo $data["email"]; ?>"/>
+                <input type="text" name="email" class="form-control" placeholder="someone@email.com" value="<?php echo $data["email"]; ?>" />
                 <span class="text-danger"><?php echo $error["email"]; ?></span>
               </div>
 
               <div class="mb-3 col-md-6">
                 <label>Phone Number<span class="text-danger">*</span></label>
-                <input type="text" name="phone" class="form-control" placeholder="Enter Phone Number" value="<?php echo $data["phone"]; ?>"/>
+                <input type="text" name="phone" class="form-control" placeholder="Enter Phone Number" value="<?php echo $data["phone"]; ?>" />
                 <span class="text-danger"><?php echo $error["phone"]; ?></span>
               </div>
 
               <div class="mb-3 col-md-6">
                 <label>Nationality<span class="text-danger">*</span></label>
-                <input type="text" name="nationality" class="form-control" placeholder="Enter Nationality" value="<?php echo $data["nationality"]; ?>"/>
+                <input type="text" name="nationality" class="form-control" placeholder="Enter Nationality" value="<?php echo $data["nationality"]; ?>" />
                 <span class="text-danger"><?php echo $error["nationality"]; ?></span>
               </div>
 
               <div class="mb-3 col-md-6">
                 <label>NID Number<span class="text-danger">*</span></label>
-                <input type="text" name="nid" class="form-control" placeholder="Enter NID Number" value="<?php echo $data["nid"]; ?>"/>
+                <input type="text" name="nid" class="form-control" placeholder="Enter NID Number" value="<?php echo $data["nid"]; ?>" />
                 <span class="text-danger"><?php echo $error["nid"]; ?></span>
               </div>
 
               <div class="mb-3 col-md-6">
                 <label>Date of birth<span class="text-danger">*</span></label>
-                <input type="date" name="dob" class="form-control" value="<?php echo $data["dob"]; ?>"/>
+                <input type="date" name="dob" class="form-control" value="<?php echo $data["dob"]; ?>" />
                 <span class="text-danger"><?php echo $error["dob"]; ?></span>
               </div>
 
               <div class="mb-3 col-md-6">
                 <label>Gender<span class="text-danger">*</span></label><br />
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="male"  <?php if ($data["gender"] == "male") echo "checked"; ?>/>
+                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="male" <?php if ($data["gender"] == "male") echo "checked"; ?> />
                   <label class="form-check-label" for="inlineRadio1">Male</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="female"  <?php if ($data["gender"] == "female") echo "checked"; ?>/>
+                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="female" <?php if ($data["gender"] == "female") echo "checked"; ?> />
                   <label class="form-check-label" for="inlineRadio2">Female</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="other"  <?php if ($data["gender"] == "other") echo "checked"; ?>/>
+                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="other" <?php if ($data["gender"] == "other") echo "checked"; ?> />
                   <label class="form-check-label" for="inlineRadio3">Other</label>
                 </div>
                 <span class="text-danger"><?php echo $error["gender"]; ?></span>

@@ -14,22 +14,29 @@
 <body>
 
     <?php
+
+    session_start();
+    if (!isset($_SESSION['id'])) {
+        session_destroy();
+        header("location:sign-in.php");
+    }
+
     require_once 'controller/manager.php';
 
     $controller = new Manager();
     $managerInfo = $controller->fetchAllManager();
 
     if (isset($_GET['id']) && !empty($_GET['id'])) {
-        
+
         if ($controller->deleteManager($_GET['id'])) {
             header('Location: all_managers.php?status=deleted');
         }
-      }
+    }
     ?>
 
     <div class="container mb-3 mt-3 bg-light shadow">
 
-        <table id="example" class="table table-striped "  style="width:100%">
+        <table id="example" class="table table-striped " style="width:100%">
             <thead>
                 <tr>
                     <th>Image</th>
@@ -49,10 +56,10 @@
                         <td><?php echo $row["reg_date"]; ?></td>
                         <td>
                             <button type="button" class="btn btn-outline-primary" onclick="window.location.href='edit_manager.php?id=<?php echo $row['id'] ?>'">View and Edit</button>
-                            
+
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger" onclick="window.location.href='all_managers.php?id=<?php echo $row['id'] ?>'"  >Delete</button>
+                            <button type="button" class="btn btn-danger" onclick="window.location.href='all_managers.php?id=<?php echo $row['id'] ?>'">Delete</button>
                         </td>
 
                     </tr>

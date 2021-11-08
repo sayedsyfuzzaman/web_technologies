@@ -12,6 +12,13 @@
 <body>
 
   <?php
+
+  session_start();
+  if (!isset($_SESSION['id'])) {
+    session_destroy();
+    header("location:sign-in.php");
+  }
+
   require_once 'controller/manager.php';
 
   $manager = new Manager();
@@ -83,7 +90,7 @@
     }
 
     $target_file = $_FILES["fileToUpload"]["name"];
-    
+
     $data = array(
       'id' => $managerInfo["id"],
       'fname' => $_POST["fname"],
@@ -123,7 +130,7 @@
             <?php
             if ($UpdateStatus == "updated") {
               header("Location: edit_manager.php?id=" . $managerInfo["id"] . "&status=updated");
-            } elseif($UpdateStatus == "failed"){
+            } elseif ($UpdateStatus == "failed") {
               echo "<div class='mb-5  d-flex justify-content-center'>
               <b class='text-danger'>Sorry! There was an error updating your account.</b>
             </div>";
