@@ -1,6 +1,6 @@
 <?php
 require_once('model/model.php');
-class Manager
+class Admin
 {
     public $errors = array(
         'name' => "",
@@ -12,7 +12,7 @@ class Manager
         'gender' => "",
         'address' => "",
     );
-    function inputValidation($data, $action)
+    function inputValidation($data)
     {
         //name validation
         if (empty($data["name"])) {
@@ -30,19 +30,18 @@ class Manager
 
         
         $model = new model();
-        $accountExist = $model->checkExistingEmail($data["email"]);
+        $accountExist = $model->checkExistingPersonalEmail($data["email"], $data["id"]);
 
         //email validation
         if (empty($data["email"])) {
             $this->errors["email"] =  "Email can not be empty";
         } elseif (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) {
             $this->errors["email"] =  "Invalid email format";
-        } elseif ($accountExist == true and $action == "insert") {
+        } elseif ($accountExist == true) {
             $this->errors["email"] =  "Email already exist, try another.";
         } else {
             $this->errors["email"] = "";
         }
-
 
         //Phone number validation
         if(!empty($data["phone"])){
@@ -57,6 +56,7 @@ class Manager
         
 
 
+
         //nationality validation
         if (empty($data["nationality"])) {
             $this->errors["nationality"] = "Nationality cannot be empty";
@@ -68,11 +68,11 @@ class Manager
 
         //nid validation
 
-        $nidExist = $model->checkExistingNID($data["nid"]);
+        $nidExist = $model->checkExistingPersonalNID($data["nid"], $data["id"]);
 
         if (empty($data["nid"])) {
             $this->errors["nid"] = "Nid cannot be empty";
-        } elseif ($nidExist == true and $action == "insert") {
+        } elseif ($nidExist == true ) {
             $this->errors["nid"] =  "Sorry! This NID already exist.";
         } elseif (!filter_var($data["nid"], FILTER_SANITIZE_NUMBER_INT)) {
             $this->errors["nid"] = "Invalid nid number";
@@ -92,39 +92,32 @@ class Manager
         return false;
     }
 
-    function addManager($data)
+    function updateProfile($data)
     {
-        if ($this->inputValidation($data, "insert") == true) {
-
-            //Getting Unique ID and Password
-            require_once('Generator.php');
-            $id = getManagerID();
-            $pass = getUniquePassword();
-            $data["id"] = $id;
-            $data["password"] = $pass;
-
+        if ($this->inputValidation($data) == true) {
 
             $model = new model();
-            $AddStatus = $model->insertManager($data);
-            if ($AddStatus === true){
-                header("location: add-manager.php?status=submitted&id=".$data["id"]."&password=".$data["password"]);
+            $updateStatus = $model->updatePersonalInfo($data);
+            if ($updateStatus === true){
+                $_SESSION["name"] = $data["name"];
+                $_SESSION["email"] = $data["email"];
+                $_SESSION["phone"] = $data["phone"];
+                $_SESSION["nationality"] = $data["nationality"];
+                $_SESSION["nid"] = $data["nid"];
+                $_SESSION["dob"] = $data["dob"];
+                $_SESSION["gender"] = $data["gender"];
+                $_SESSION["address"] = $data["address"];
+                header("location: profile-setting.php?status=updated");
             }
             else
             {
-                header("location: add-manager.php?status=submission_error");
+                header("location: profile-setting.php?status=submission_error");
             }
         }
         else
         {
-            header("location: add-manager.php?status=submission_error");
+            header("location: profile-setting.php?status=submission_error");
         }
         return "";
-    }
-
-    function fetchAllManager()
-    {
-        $model = new model();
-        $managers = $model->showAllManager();
-        return $managers;
     }
 }

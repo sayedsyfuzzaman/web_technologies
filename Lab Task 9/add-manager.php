@@ -38,7 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data["nationality"] = $_POST['nationality'];
     $data["nid"] = $_POST['nid'];
     $data["dob"] = $_POST['dob'];
-    $data["gender"] = $_POST['gender'];
+
+    if (!empty($_POST["gender"])) {
+        $data["gender"] = $_POST["gender"];
+    }
+
     $data["address"] = $_POST['address'];
     require_once 'controller/Manager.php';
     $manager = new Manager();
@@ -420,7 +424,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 check_name();
                 check_email();
-                check_phone();
+                //check_phone();
                 check_nationality();
                 check_nid();
 

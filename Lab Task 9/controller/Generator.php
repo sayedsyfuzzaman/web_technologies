@@ -1,8 +1,8 @@
 <?php
-
+require_once 'model/model.php';
 function getManagerID() {
 
-    require_once '../model/model.php';
+    
     
     $model = new model();
     $count = $model->getTotalManagerNumber();

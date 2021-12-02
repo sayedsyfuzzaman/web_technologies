@@ -65,6 +65,28 @@ class model
         }
     }
 
+    function checkExistingPersonalEmail($email, $id)
+    {
+        $conn = db_conn();
+        $selectQuery = "SELECT * FROM admin_info WHERE email = ? and id != ?;";
+
+        try {
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([
+                $email,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $conn = null;
+
+        if (!empty($row)) {
+            return true;
+        }
+    }
+
     function checkExistingNID($nid)
     {
         $conn = db_conn();
@@ -72,7 +94,32 @@ class model
 
         try {
             $stmt = $conn->prepare($selectQuery);
-            $stmt->execute([$nid]);
+            $stmt->execute([
+                $nid
+            ]);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $conn = null;
+
+        if (!empty($row)) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkExistingPersonalNID($nid , $id)
+    {
+        $conn = db_conn();
+        $selectQuery = "SELECT * FROM `admin_info` where nid = ? and id != ?";
+
+        try {
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([
+                $nid,
+                $id
+            ]);
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -122,7 +169,7 @@ class model
     function showAllManager()
     {
         $conn = db_conn();
-        $selectQuery = 'SELECT * FROM `manager-info` ';
+        $selectQuery = 'SELECT * FROM `manager_info` ';
         try {
             $stmt = $conn->query($selectQuery);
         } catch (PDOException $e) {
@@ -131,5 +178,29 @@ class model
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $conn = null;
         return $rows;
+    }
+
+    
+    function updatePersonalInfo($data) {
+        $conn = db_conn();
+        $selectQuery = "UPDATE admin_info set name = ?, email = ?, phone = ?, nid = ?, dob = ?, gender = ?, address = ?, nationality = ? where id = ?";
+        try{
+            $stmt = $conn->prepare($selectQuery);
+            $stmt->execute([
+                $data["name"],
+                $data["email"],
+                $data["phone"],
+                $data["nid"],
+                $data["dob"],
+                $data["gender"],
+                $data["address"],
+                $data["nationality"],
+                $data["id"]
+            ]);
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        $conn = null;
+        return true;
     }
 }

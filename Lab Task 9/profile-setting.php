@@ -25,8 +25,8 @@
 			$('#upload_image').change(function(event) {
 				var files = event.target.files;
 				var ext = $("#upload_image").val().split('.').pop();
-				
-				if (ext.match(/jpg/) || ext.match(/png/) || ext.match(/jpeg/) || ext.match(/JPG/) ) {
+
+				if (ext.match(/jpg/) || ext.match(/png/) || ext.match(/jpeg/) || ext.match(/JPG/)) {
 					$("#picture-error").hide();
 					var done = function(url) {
 						crop_image.src = url;
@@ -105,6 +105,40 @@ if (!isset($_SESSION['id'])) {
 	session_destroy();
 	header("location:sign-in.php");
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	$data = array(
+		'id' => $_SESSION["id"],
+		'password' => "",
+		'name' => "",
+		'email' => "",
+		'phone' => "",
+		'nationality' => "",
+		'nid' => "",
+		'dob' => "",
+		'gender' => "",
+		'address' => "",
+		'image' => "",
+	);
+
+
+	$data["name"] = $_POST['fname'];
+	$data["email"] = $_POST['email'];
+	$data["phone"] = $_POST['phone'];
+	$data["nationality"] = $_POST['nationality'];
+	$data["nid"] = $_POST['nid'];
+	$data["dob"] = $_POST['dob'];
+
+	if (!empty($_POST["gender"])) {
+		$data["gender"] = $_POST["gender"];
+	}
+
+	$data["address"] = $_POST['address'];
+	require_once 'controller/Admin.php';
+	$admin = new Admin();
+	$admin->updateProfile($data);
+}
+
 ?>
 
 <body>
@@ -132,6 +166,7 @@ if (!isset($_SESSION['id'])) {
 						</nav>
 					</div>
 
+
 					<div class="row">
 						<div class="col-md-3 col-xl-2">
 
@@ -155,6 +190,26 @@ if (!isset($_SESSION['id'])) {
 							<div class="tab-content">
 								<div class="tab-pane fade show active" id="account" role="tabpanel">
 
+									<?php
+									if (isset($_GET['status'])) {
+										if ($_GET['status'] === "updated") {
+											echo '<div class="row" id = "status">';
+											echo '<div class="col-12">';
+											echo '<div class="card">';
+											echo '<div class="card-header">';
+											echo '<h5 class="card-title mb-0">Profile updated successfully!</h5>';
+											echo '</div>';
+											echo '</div>';
+											echo '</div>';
+											echo '</div>';
+										} elseif ($_GET['status'] === "submission_error") {
+											echo '<script type ="text/JavaScript">';
+											echo 'alert("Sorry! Something went wrong. Please try again.")';
+											echo '</script>';
+										}
+									}
+									?>
+
 									<div class="card">
 										<div class="card-header">
 											<h1 class="card-title mb-8 text-success">
@@ -167,6 +222,7 @@ if (!isset($_SESSION['id'])) {
 											<h5 class="card-title mb-0">Information</h5>
 										</div>
 										<div class="card-body">
+
 											<div class="row">
 												<div class="col-md-8">
 													<div class="form-group">
@@ -229,12 +285,11 @@ if (!isset($_SESSION['id'])) {
 											<h5 class="card-title mb-0">Change Information</h5>
 										</div>
 										<div class="card-body">
-
 											<form id="regForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
 												<div class="form-group row">
 													<label class="col-form-label col-sm-2 text-sm-right">Full Name<span class="text-danger"> *</span></label>
 													<div class="col-sm-10">
-														<input type="text" class="form-control" id="name" name="name" value="<?php echo $_SESSION["name"]; ?>">
+														<input type="text" id="fname" name="fname" class="form-control" value="<?php echo $_SESSION["name"]; ?>">
 														<label id="name-error" class="error validation-error small form-text invalid-feedback"></label>
 													</div>
 												</div>
@@ -336,7 +391,6 @@ if (!isset($_SESSION['id'])) {
 												</div>
 												<button type="submit" class="btn btn-primary">Save changes</button>
 											</form>
-
 										</div>
 									</div>
 								</div>
@@ -355,6 +409,221 @@ if (!isset($_SESSION['id'])) {
 
 	<!-- Javascript Start from here -->
 	<script src="js/app.js"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			$("#close-status").click(function() {
+				$("#status").hide();
+			});
+
+			$("#name-error").hide();
+			$("#email-error").hide();
+			$("#phone-error").hide();
+			$("#nationality-error").hide();
+			$("#nid-error").hide();
+			$("#dob-error").hide();
+			$("#gender-error").hide();
+			$("#upload_image-error").hide();
+
+			$("#upload_image").show();
+
+			var error_name = false;
+			var error_email = false;
+			var error_phone = false;
+			var error_nationality = false;
+			var error_nid = false;
+
+			$("#fname").keyup(function() {
+				check_name();
+			});
+			$("#fname").blur(function() {
+				check_name();
+			});
+
+			$("#email").keyup(function() {
+				check_email();
+			});
+			$("#email").blur(function() {
+				check_email();
+			});
+
+			$("#phone").keyup(function() {
+				check_phone();
+			});
+
+			$("#nationality").keyup(function() {
+				check_nationality();
+			});
+			$("#nationality").blur(function() {
+				check_nationality();
+			});
+
+			$("#nid").keyup(function() {
+				check_nid();
+			});
+			$("#nid").blur(function() {
+				check_nid();
+			});
+
+			function check_name() {
+				var name = $("#fname").val();
+				if (name == "") {
+					$("#name-error").html("This field is required.");
+					$("#name-error").show();
+					$("#fname").addClass("is-invalid")
+					error_name = true;
+				} else if (/[A-Za-z]/.test(name[0]) == false) {
+					$("#name-error").html("Must start with a letter.");
+					$("#name-error").show();
+					$("#fname").addClass("is-invalid")
+					error_name = true;
+				} else if (/^[A-Za-z\s._-]+$/.test(name) == false) {
+					$("#name-error").html("Name can contain letter,desh,dot and space.");
+					$("#name-error").show();
+					$("#fname").addClass("is-invalid")
+					error_name = true;
+				} else if (name.match(/(\w+)/g).length < 2) {
+					$("#name-error").html("Cannot contain less than two word.");
+					$("#name-error").show();
+					$("#fname").addClass("is-invalid")
+					error_name = true;
+				} else {
+					$("#name-error").hide();
+					$("#fname").removeClass("is-invalid");
+				}
+			}
+
+
+
+			function check_email() {
+				var email = $("#email").val();
+				if (email == "") {
+					$("#email-error").html("This field is required.");
+					$("#email-error").show();
+					$("#email").addClass("is-invalid")
+					error_email = true;
+				} else if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email) == false) {
+					$("#email-error").html("Invalid email format.");
+					$("#email-error").show();
+					$("#email").addClass("is-invalid")
+					error_email = true;
+				} else if (email != "") {
+					const xhttp = new XMLHttpRequest();
+					xhttp.onload = function() {
+
+						if (this.responseText == "exist") {
+							$("#email-error").html("Email alrady exist, Try another.");
+							$("#email-error").show();
+							$("#email").addClass("is-invalid")
+							email_error = true;
+						} else if (this.responseText == "not_exist") {
+							$("#email-error").hide();
+							$("#email").removeClass("is-invalid");
+							email_error = false
+						}
+					}
+					xhttp.open("GET", "controller/EmailChecker.php?myemail=" + email);
+					xhttp.send();
+				} else {
+					$("#email-error").hide();
+					$("#email").removeClass("is-invalid");
+				}
+
+			}
+
+			function check_phone() {
+				var phone = $("#phone").val();
+				if (isNaN(phone)) {
+					$("#phone-error").html("Invalid phone number.");
+					$("#phone-error").show();
+					$("#phone").addClass("is-invalid")
+					error_phone = true;
+				} else if (phone.length != 11 && phone != "") {
+					$("#phone-error").html("Phone number must be equal to 11.");
+					$("#phone-error").show();
+					$("#phone").addClass("is-invalid")
+					error_phone = true;
+				} else {
+					$("#phone-error").hide();
+					$("#phone").removeClass("is-invalid");
+				}
+			}
+
+			function check_nationality() {
+				var nationality = $("#nationality").val();
+				if (nationality == "") {
+					$("#nationality-error").html("This field is required.");
+					$("#nationality-error").show();
+					$("#nationality").addClass("is-invalid")
+					error_nationality = true;
+				} else if (/^[a-zA-Z]+$/.test(nationality) == false) {
+					$("#nationality-error").html("Cannot contain alphabet or characters.");
+					$("#nationality-error").show();
+					$("#nationality").addClass("is-invalid")
+					error_nationality = true;
+				} else {
+					$("#nationality-error").hide();
+					$("#nationality").removeClass("is-invalid");
+				}
+			}
+
+			function check_nid() {
+				var nid = $("#nid").val();
+
+				if (nid == "") {
+					$("#nid-error").html("This field is required.");
+					$("#nid-error").show();
+					$("#nid").addClass("is-invalid")
+					error_nid = true;
+				} else if (/^[0-9]*$/.test(nid) == false) {
+					$("#nid-error").html("Cannot contain alphabet or characters.");
+					$("#nid-error").show();
+					$("#nid").addClass("is-invalid")
+					error_nid = true;
+				} else if (nid != "") {
+					const xhttp = new XMLHttpRequest();
+					xhttp.onload = function() {
+						if (this.responseText == "exist") {
+							$("#nid-error").html("Sorry! This nid already exist.");
+							$("#nid-error").show();
+							$("#nid").addClass("is-invalid")
+							email_error = true;
+						} else if (this.responseText == "not_exist") {
+							$("#nid-error").hide();
+							$("#nid").removeClass("is-invalid");
+							email_error = false
+						}
+					}
+					xhttp.open("GET", "controller/NidChecker.php?mynid=" + nid);
+					xhttp.send();
+				} else {
+					$("#nid-error").hide();
+					$("#nid").removeClass("is-invalid");
+				}
+			}
+
+			$("#regForm").submit(function() {
+				error_name = false;
+				error_email = false;
+				error_phone = false;
+				error_nationality = false;
+				error_nid = false;
+
+				check_name();
+				check_email();
+				check_phone();
+				check_nationality();
+				check_nid();
+
+				if (error_name === false && error_email === false && error_phone === false && error_nationality === false && error_nid === false) {
+					return true;
+				} else {
+					alert("Please Fill the form Correctly");
+					return false;
+				}
+			});
+		});
+	</script>
 
 </body>
 

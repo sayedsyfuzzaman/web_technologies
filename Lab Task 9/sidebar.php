@@ -3,7 +3,7 @@
 
 <body>
     <nav id="sidebar" class="sidebar">
-        <a class="sidebar-brand" href="">
+        <a class="sidebar-brand" href="dashboard.php">
             Dashboard
         </a>
         <div class="sidebar-content">
@@ -22,9 +22,9 @@
                         <i class="align-middle mr-2 fas fa-fw fa-home"></i> <span class="align-middle">Dashboard</span>
                     </a>
                     <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse show" data-parent="#sidebar">
-                        <li class="sidebar-item active"><a class="sidebar-link " href="">Home</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="">History</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="">View Profile</a></li>
+                        <li class="sidebar-item active"><a class="sidebar-link " href="dashboard.php">Home</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="history.php">History</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="view-profile.php">View Profile</a></li>
                     </ul>
                 </li>
 
@@ -38,8 +38,8 @@
                         <i class="align-middle mr-2 fas fa-fw ion-ios-person"></i> <span class="align-middle">Manager</span>
                     </a>
                     <ul id="manager" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-                        <li class="sidebar-item "><a class="sidebar-link" href="add_manager.php">Add Manager</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="all_managers.php">Manager List</a></li>
+                        <li class="sidebar-item "><a class="sidebar-link" href="add-manager.php">Add Manager</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="manager-details.php">Manager List</a></li>
                     </ul>
                 </li>
 
@@ -52,8 +52,8 @@
                         <i class="align-middle mr-2 fas fa-fw fa-book"></i> <span class="align-middle">Course</span>
                     </a>
                     <ul id="course" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-                        <li class="sidebar-item "><a class="sidebar-link" href="#">Add Course</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="#">Course List</a></li>
+                        <li class="sidebar-item "><a class="sidebar-link" href="add-course.php">Add Course</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="courses.php">Course List</a></li>
                     </ul>
                 </li>
             </ul>
